@@ -21,6 +21,8 @@
 import threading
 import datetime
 
+import xbmc
+
 
 class Controller(threading.Thread):
   
@@ -35,7 +37,7 @@ class Controller(threading.Thread):
          self.waitCondition.acquire()
          while not self.shouldStop():
              self.now = datetime.datetime.today()
-             self.waitFor = 10-self.now.second % 10
+             self.waitFor = 30-self.now.second % 30
              
 	     self.drawClock_callback()
          
@@ -44,15 +46,8 @@ class Controller(threading.Thread):
       
       
     def shouldStop(self):
-        '''
-        Two conditions result in stopping: a call to stop(), or the window not
-        being visible after once being visible.
-        '''
-        #visible = xbmc.getCondVisibility('Window.IsVisible(%s)' % WINDOW_ID)
-        #if self.windowSighted and not visible:
-        #    return True
-        #elif visible:
-        #     self.windowSighted = True
+        if (xbmc.abortRequested):
+            return True
         return self._stop
         
     def stop(self):

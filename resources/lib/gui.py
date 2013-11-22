@@ -69,7 +69,7 @@ class Screensaver(xbmcgui.WindowDialog):
             #self.log(self.flatLightsArray)
         return self.flatLightsArray
       
-    def drawSinglePart(self, xOffset, yOffset, numberOfLights, texture):
+    def drawSinglePart(self, xOffset, yOffset, numberOfLights, texture, imageOffset):
         size = blockSize
         lightBlock = self.computeActiveLights(size, numberOfLights)
         for cell in range(0,size*size):
@@ -77,32 +77,39 @@ class Screensaver(xbmcgui.WindowDialog):
             row = cell/size +1
             #self.log((str(cell) + ' ' + str(row) + ',' + str(column)))
             t = 'grey.png'
+            newX = self.topX+xOffset+row*(lightSize+lightPadding)
+            newY = self.topY+yOffset+column*(lightSize+lightPadding)
 	    if (1 == lightBlock[cell]):
 	      t = texture
-            testbutton = xbmcgui.ControlButton(self.topX+xOffset+row*(lightSize+lightPadding),self.topY+yOffset+column*(lightSize+lightPadding),lightSize,lightSize, '', focusTexture=image_dir+t, noFocusTexture=image_dir+t)
-            testbutton.setEnabled(False)
-            testbutton.setVisible(False)
-            self.allButtons.append(testbutton)
-            self.addControl(testbutton)
+
+            if (len(self.allImages)<=imageOffset+cell):
+                image = xbmcgui.ControlImage(newX,newY,lightSize,lightSize, image_dir+t, 0)
+                image.setVisible(False)
+                self.allImages.append(image)
+                self.addControl(image)
+            else:
+                self.allImages[imageOffset+cell].setImage(image_dir+t)
+                self.allImages[imageOffset+cell].setPosition(newX,newY)
+                
 
 
     def showClock(self):
-        for b in self.allButtons[:]:
+        for b in self.allImages[:]:
 	    b.setVisible(False)
-            self.removeControl(b)
-        del self.allButtons[:]
-        self.log('len ' + str(len(self.allButtons)))
+            #self.removeControl(b)
+        #del self.allImages[:]
+        #self.log('len ' + str(len(self.allImages)))
         now = datetime.datetime.today()
         hour = now.hour
         #self.log(('hour ' + str(hour)))
-        self.drawSinglePart(0, 0, (hour/10), 'red.png')
-        self.drawSinglePart(3*(lightSize+lightPadding)+1*blockPaddingSmall, 0, (hour%10), 'blue.png')
+        self.drawSinglePart(0, 0, (hour/10), 'red.png', 0)
+        self.drawSinglePart(3*(lightSize+lightPadding)+1*blockPaddingSmall, 0, (hour%10), 'blue.png', 9)
        
         minute = now.minute
         #self.log(('minute ' + str(minute)))
-        self.drawSinglePart(6*(lightSize+lightPadding)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), 'green.png')
-        self.drawSinglePart(9*(lightSize+lightPadding)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), 'purple.png')
-        for b in self.allButtons[:]:
+        self.drawSinglePart(6*(lightSize+lightPadding)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), 'green.png', 18)
+        self.drawSinglePart(9*(lightSize+lightPadding)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), 'purple.png', 27)
+        for b in self.allImages[:]:
 	    b.setVisible(True)
         self.topX = random.randint(50,500)
         self.topY = random.randint(50,500)
@@ -110,33 +117,30 @@ class Screensaver(xbmcgui.WindowDialog):
     def __init__(self):
 	self.log("Screensaver starting");
 	self.monitor = self.ExitMonitor(self.exit, self.log)
-	self.allButtons = list()
+	self.allImages = list()
 	self.topX = 200
         self.topY = 200
-        #self.strActionInfo = xbmcgui.ControlLabel(100, 120, 200, 200, '', 'font13', '0xFFFF00FF')
-        #self.addControl(self.strActionInfo)
-        #self.strActionInfo.setLabel('Push BACK to quit - A to reset text')
-        #self.strActionFade = xbmcgui.ControlFadeLabel(200, 300, 200, 200, 'font13', '0xFFFFFF00')
-        #self.addControl(self.strActionFade)
-        #self.strActionFade.addLabel('This is a fade label')
         
-        #self.testbutton = xbmcgui.ControlButton(150,150,50,50, '', focusTexture=image_dir+'red.png', noFocusTexture=image_dir+'red.png')
-        #self.addControl(self.testbutton)
         self.log(addon_path)
 
-	self.cont = controller.Controller(self.log, self.showClock)
+        
+        self.cont = controller.Controller(self.log, self.showClock)
         self.cont.start() 
         #self.showClock()
+        
         
     
 
     def exit(self):
         self.log('Exit requested')
 	self.cont.stop()
+	for b in self.allImages[:]:
+	    b.setVisible(False)
 	del self.monitor
 	del self.cont
-	map(self.removeControl, self.allButtons)
-        del self.allButtons[:]
+	for b in self.allImages[:]:
+	    self.removeControl(b)
+        del self.allImages[:]
         self.close()
     
     def log(self, msg):
