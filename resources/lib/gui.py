@@ -93,12 +93,12 @@ class Screensaver(xbmcgui.WindowDialog):
         del self.allButtons[:]
         self.log('len ' + str(len(self.allButtons)))
         now = datetime.datetime.today()
-        hour = 23 #now.hour
+        hour = now.hour
         #self.log(('hour ' + str(hour)))
         self.drawSinglePart(0, 0, (hour/10), 'red.png')
         self.drawSinglePart(3*(lightSize+lightPadding)+1*blockPaddingSmall, 0, (hour%10), 'blue.png')
        
-        minute = 59 #now.minute
+        minute = now.minute
         #self.log(('minute ' + str(minute)))
         self.drawSinglePart(6*(lightSize+lightPadding)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), 'green.png')
         self.drawSinglePart(9*(lightSize+lightPadding)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), 'purple.png')
