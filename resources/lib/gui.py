@@ -54,6 +54,9 @@ class Screensaver(xbmcgui.WindowDialog):
         def onScreensaverDeactivated(self):
             self.log_callback('sending exit_callback')
             self.exit_callback()
+        def onAbortRequested(self):
+	    self.log_callback('abort requested')
+	    self.exit_callback()
 
         
 
@@ -94,6 +97,8 @@ class Screensaver(xbmcgui.WindowDialog):
 
 
     def showClock(self):
+        #self.log(xbmcgui.getCurrentWindowId())
+        self.log('drawing clock')
         for b in self.allImages[:]:
 	    b.setVisible(False)
             #self.removeControl(b)
