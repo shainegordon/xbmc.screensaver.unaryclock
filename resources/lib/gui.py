@@ -25,7 +25,7 @@ import xbmcaddon
 import xbmcgui
 import xbmc
 
-import numpy as np
+#import numpy as np
 import controller
 
 addon = xbmcaddon.Addon()
@@ -61,8 +61,10 @@ class Screensaver(xbmcgui.WindowDialog):
         
 
     
-    def computeActiveLights(self, size, numberOfLights):
-        self.flatLightsArray = np.zeros((size*size))
+    def computeActiveLights(self, size, numberOfLights): 
+        self.flatLightsArray = list()
+        for number in range(0,size*size):
+            self.flatLightsArray.append(0)
         for number in range(0,numberOfLights):
             rand = random.randint(0,size*size-1)
             while self.flatLightsArray[rand] == 1:
@@ -98,7 +100,7 @@ class Screensaver(xbmcgui.WindowDialog):
 
     def showClock(self):
         #self.log(xbmcgui.getCurrentWindowId())
-        self.log('drawing clock')
+        #self.log('drawing clock')
         for b in self.allImages[:]:
 	    b.setVisible(False)
             #self.removeControl(b)
