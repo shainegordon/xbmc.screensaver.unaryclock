@@ -35,11 +35,14 @@ image_dir = addon_path + "/resources/skins/default/media/"
 
 
 
-lightSize = 50
-lightPadding = 2
+lightSizeNormal = 50
+lightPaddingNormal = 2
 blockPaddingLarge = 50
 blockPaddingSmall = 10
-blockSize = 3
+blockSizeNormal = 3
+blockSizeSeconds = 9
+
+showSeconds = True
 
 
 
@@ -74,16 +77,26 @@ class Screensaver(xbmcgui.WindowDialog):
             #self.log(self.flatLightsArray)
         return self.flatLightsArray
       
-    def drawSinglePart(self, xOffset, yOffset, numberOfLights, texture, imageOffset):
-        size = blockSize
-        lightBlock = self.computeActiveLights(size, numberOfLights)
-        for cell in range(0,size*size):
-	    column = cell%size +1
-            row = cell/size +1
+    def drawSinglePart(self, xOffset, yOffset, numberOfLights, blockSize, texture, imageOffset):
+        lightBlock = self.computeActiveLights(blockSize, numberOfLights)
+        lightSize = lightSizeNormal
+        lightPadding = lightPaddingNormal
+        #autoscaling
+        if (blockSize > blockSizeNormal):
+	    lightSize = ((blockSizeNormal*lightSize)+(blockPaddingSmall*(blockSizeNormal-1)) - blockSize*1)  / (blockSize+1)
+	    lightPadding = 1
+	    #lightSize = max(lightSize, 10)
+	    #lightPadding = max(lightPadding, 10)
+	    #self.log('size ' + str(lightSize))
+        for cell in range(0,blockSize*blockSize):
+	    #xbmc.sleep(100)
+	    column = cell%blockSize
+            row = cell/blockSize
             #self.log((str(cell) + ' ' + str(row) + ',' + str(column)))
             t = 'grey.png'
-            newX = self.topX+xOffset+row*(lightSize+lightPadding)
-            newY = self.topY+yOffset+column*(lightSize+lightPadding)
+            
+            newX = self.topX+xOffset+column*(lightSize+lightPadding)
+            newY = self.topY+yOffset+row*(lightSize+lightPadding)
 	    if (1 == lightBlock[cell]):
 	      t = texture
 
@@ -97,29 +110,37 @@ class Screensaver(xbmcgui.WindowDialog):
                 self.allImages[imageOffset+cell].setPosition(newX,newY)
                 
 
-
-    def showClock(self):
+    def showClock(self, onlySeconds):
         #self.log(xbmcgui.getCurrentWindowId())
         #self.log('drawing clock')
-        for b in self.allImages[:]:
-	    b.setVisible(False)
-            #self.removeControl(b)
-        #del self.allImages[:]
-        #self.log('len ' + str(len(self.allImages)))
         now = datetime.datetime.today()
-        hour = now.hour
-        #self.log(('hour ' + str(hour)))
-        self.drawSinglePart(0, 0, (hour/10), 'red.png', 0)
-        self.drawSinglePart(3*(lightSize+lightPadding)+1*blockPaddingSmall, 0, (hour%10), 'blue.png', 9)
+        if (onlySeconds == False):
+           for b in self.allImages[:]:
+	       b.setVisible(False)
+	   self.topX = random.randint(50,500)
+           self.topY = random.randint(50,500)
+           #self.removeControl(b)
+           #del self.allImages[:]
+           #self.log('len ' + str(len(self.allImages)))
+           
+           hour = now.hour
+           #self.log(('hour ' + str(hour)))
+           self.drawSinglePart(0, 0, (hour/10), blockSizeNormal, 'red.png', 0)
+           self.drawSinglePart(3*(lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall, 0, (hour%10), blockSizeNormal, 'blue.png', 9)
        
-        minute = now.minute
-        #self.log(('minute ' + str(minute)))
-        self.drawSinglePart(6*(lightSize+lightPadding)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), 'green.png', 18)
-        self.drawSinglePart(9*(lightSize+lightPadding)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), 'purple.png', 27)
-        for b in self.allImages[:]:
-	    b.setVisible(True)
-        self.topX = random.randint(50,500)
-        self.topY = random.randint(50,500)
+           minute = now.minute
+           #self.log(('minute ' + str(minute)))
+           self.drawSinglePart(6*(lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), blockSizeNormal, 'green.png', 18)
+           self.drawSinglePart(9*(lightSizeNormal+lightPaddingNormal)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), blockSizeNormal, 'purple.png', 27)
+        
+        second = now.second
+        self.drawSinglePart(12*(lightSizeNormal+lightPaddingNormal)+3*blockPaddingSmall+2*blockPaddingLarge, 0, second, blockSizeSeconds, 'cyan.png', 36)
+        
+        if (onlySeconds == False):
+            for b in self.allImages[:]:
+	        b.setVisible(True)
+            
+       
 
     def __init__(self):
 	self.log("Screensaver starting");
@@ -130,7 +151,7 @@ class Screensaver(xbmcgui.WindowDialog):
         
         self.log(addon_path)
 
-        
+        self.showClock(False)
         self.cont = controller.Controller(self.log, self.showClock)
         self.cont.start() 
         #self.showClock()
