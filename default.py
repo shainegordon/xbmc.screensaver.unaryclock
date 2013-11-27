@@ -39,9 +39,9 @@ sys.path.append(__resource__)
 if __name__ == '__main__':
     import gui
     screensaver_gui = gui.Screensaver(
-        #'clock.xml',
-        #addon_path,
-        #'default',
+        'unaryclock.xml',
+        addon_path,
+        'default',
     )
     screensaver_gui.doModal()
     del screensaver_gui

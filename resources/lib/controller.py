@@ -37,12 +37,11 @@ class Controller(threading.Thread):
          self.waitCondition.acquire()
          while not self.shouldStop():
              self.now = datetime.datetime.today()
-             self.waitFor = 1000000 - self.now.microsecond
+             self.waitFor =  1000000 - self.now.microsecond
              if (self.now.second % 30 == 0):
 	         self.drawClock_callback(False)
 	     else:
 	         self.drawClock_callback(True)
-             self.log_callback('wait ' + str(float(self.waitFor)/1000000))
              self.waitCondition.wait(float(self.waitFor) / 1000000)
          self.waitCondition.release()
       

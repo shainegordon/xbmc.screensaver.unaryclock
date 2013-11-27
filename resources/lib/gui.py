@@ -40,13 +40,13 @@ lightPaddingNormal = 2
 blockPaddingLarge = 50
 blockPaddingSmall = 10
 blockSizeNormal = 3
-blockSizeSeconds = 9
+blockSizeSeconds = 8
 
 showSeconds = True
 
 
 
-class Screensaver(xbmcgui.WindowDialog):
+class Screensaver(xbmcgui.WindowXMLDialog):
 
     class ExitMonitor(xbmc.Monitor):
 
@@ -61,7 +61,6 @@ class Screensaver(xbmcgui.WindowDialog):
 	    self.log_callback('abort requested')
 	    self.exit_callback()
 
-        
 
     
     def computeActiveLights(self, size, numberOfLights): 
@@ -83,16 +82,11 @@ class Screensaver(xbmcgui.WindowDialog):
         lightPadding = lightPaddingNormal
         #autoscaling
         if (blockSize > blockSizeNormal):
-	    lightSize = ((blockSizeNormal*lightSize)+(blockPaddingSmall*(blockSizeNormal-1)) - blockSize*1)  / (blockSize+1)
-	    lightPadding = 1
-	    #lightSize = max(lightSize, 10)
-	    #lightPadding = max(lightPadding, 10)
-	    #self.log('size ' + str(lightSize))
+	    lightSize = ((blockSizeNormal*lightSize)+(blockPaddingSmall*(blockSizeNormal-1)) - blockSize*3)  / (blockSize+1)
+	    lightPadding = 3
         for cell in range(0,blockSize*blockSize):
-	    #xbmc.sleep(100)
 	    column = cell%blockSize
             row = cell/blockSize
-            #self.log((str(cell) + ' ' + str(row) + ',' + str(column)))
             t = 'grey.png'
             
             newX = self.topX+xOffset+column*(lightSize+lightPadding)
@@ -111,17 +105,12 @@ class Screensaver(xbmcgui.WindowDialog):
                 
 
     def showClock(self, onlySeconds):
-        #self.log(xbmcgui.getCurrentWindowId())
-        #self.log('drawing clock')
         now = datetime.datetime.today()
         if (onlySeconds == False):
            for b in self.allImages[:]:
 	       b.setVisible(False)
 	   self.topX = random.randint(50,500)
            self.topY = random.randint(50,500)
-           #self.removeControl(b)
-           #del self.allImages[:]
-           #self.log('len ' + str(len(self.allImages)))
            
            hour = now.hour
            #self.log(('hour ' + str(hour)))
@@ -140,18 +129,18 @@ class Screensaver(xbmcgui.WindowDialog):
             for b in self.allImages[:]:
 	        b.setVisible(True)
             
-       
 
-    def __init__(self):
+    def onInit(self):
 	self.log("Screensaver starting");
 	self.monitor = self.ExitMonitor(self.exit, self.log)
 	self.allImages = list()
 	self.topX = 200
         self.topY = 200
-        
+      
         self.log(addon_path)
 
         self.showClock(False)
+	xbmc.sleep(1000)
         self.cont = controller.Controller(self.log, self.showClock)
         self.cont.start() 
         #self.showClock()
