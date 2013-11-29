@@ -101,6 +101,8 @@ class Screensaver(xbmcgui.WindowXMLDialog):
             else:
                 self.allImages[imageOffset+cell].setImage(image_dir+t)
                 self.allImages[imageOffset+cell].setPosition(newX,newY)
+                self.allImages[imageOffset+cell].setWidth(lightSize)
+                self.allImages[imageOffset+cell].setHeight(lightSize)
                 
 
     def showClock(self, onlySeconds):
