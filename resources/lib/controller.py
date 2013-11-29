@@ -23,13 +23,14 @@ import datetime
 
 import xbmc
 
-
 class Controller(threading.Thread):
   
-    def __init__(self, log_callback, drawClock_callback):
+    def __init__(self, log_callback, drawClock_callback, showSeconds, redrawInterval):
       super(Controller, self).__init__()
       self.log_callback = log_callback
       self.drawClock_callback = drawClock_callback
+      self.showSeconds = showSeconds
+      self.redrawInterval = redrawInterval
       self.waitCondition = threading.Condition()
       self._stop = False
       
@@ -37,11 +38,12 @@ class Controller(threading.Thread):
          self.waitCondition.acquire()
          while not self.shouldStop():
              self.now = datetime.datetime.today()
+             if (self.now.second % self.redrawInterval == 0):
+                self.drawClock_callback(False)
+             elif (self.showSeconds):
+                self.drawClock_callback(True)
+
              self.waitFor =  1000000 - self.now.microsecond
-             if (self.now.second % 30 == 0):
-	         self.drawClock_callback(False)
-	     else:
-	         self.drawClock_callback(True)
              self.waitCondition.wait(float(self.waitFor) / 1000000)
          self.waitCondition.release()
       
