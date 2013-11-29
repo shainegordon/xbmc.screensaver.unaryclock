@@ -20,6 +20,7 @@
 import random
 import datetime
 import time
+import os
 
 import xbmcaddon
 import xbmcgui
@@ -27,10 +28,12 @@ import xbmc
 
 import controller
 
+
 addon = xbmcaddon.Addon()
 addon_name = addon.getAddonInfo('name')
 addon_path = addon.getAddonInfo('path')
-image_dir = addon_path + "/resources/skins/default/media/"
+image_dir = xbmc.translatePath( os.path.join( addon_path, 'resources', 'skins', 'default', 'media' ,'').encode("utf-8") ).decode("utf-8")
+
 
 
 lightSizeNormal = 50

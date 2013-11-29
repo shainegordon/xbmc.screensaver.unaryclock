@@ -25,7 +25,6 @@ import xbmc
 addon = xbmcaddon.Addon()
 addon_name = addon.getAddonInfo('name')
 addon_path = addon.getAddonInfo('path')
-image_dir = addon_path + "/resources/skins/default/media/"
 
 __addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
