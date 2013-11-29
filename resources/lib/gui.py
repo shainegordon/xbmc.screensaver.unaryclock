@@ -108,8 +108,8 @@ class Screensaver(xbmcgui.WindowXMLDialog):
         if (onlySeconds == False):
             for b in self.allImages[:]:
 	        b.setVisible(False)
-	    self.topX = random.randint(50,500)
-            self.topY = random.randint(50,500)
+	    self.topX = random.randint(blockPaddingLarge, self.getWidth() - self.totalClockWidth)
+            self.topY = random.randint(blockPaddingLarge, self.getHeight() - self.totalClockHeight)
            
             hour = now.hour
             #self.log(('hour ' + str(hour)))
@@ -140,8 +140,14 @@ class Screensaver(xbmcgui.WindowXMLDialog):
         self.redrawInterval = int(self.addon.getSetting('setting_redraw_interval'))
 	self.monitor = self.ExitMonitor(self.exit, self.log)
 	self.allImages = list()
-	self.topX = 200
-        self.topY = 200
+	self.topX = 100
+        self.topY = 100
+        
+        multiplier = 4
+        if (self.showSeconds):
+	  multiplier = 5
+        self.totalClockWidth = multiplier * (blockPaddingLarge + (blockSizeNormal*(lightSizeNormal + lightPaddingNormal)))
+        self.totalClockHeight = blockSizeNormal*(lightSizeNormal + lightPaddingNormal)
       
         self.log(addon_path)
 
