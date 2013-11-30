@@ -36,7 +36,7 @@ image_dir = xbmc.translatePath( os.path.join( addon_path, 'resources', 'skins', 
 
 
 
-lightSizeNormal = 50
+#lightSizeNormal = 50
 lightPaddingNormal = 2
 blockPaddingLarge = 50
 blockPaddingSmall = 10
@@ -80,7 +80,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
       
     def drawSinglePart(self, xOffset, yOffset, numberOfLights, blockSize, texture, imageOffset):
         lightBlock = self.computeActiveLights(blockSize, numberOfLights)
-        lightSize = lightSizeNormal
+        lightSize = self.lightSizeNormal
         lightPadding = lightPaddingNormal
         #autoscaling
         if (blockSize > blockSizeNormal):
@@ -113,21 +113,35 @@ class Screensaver(xbmcgui.WindowXMLDialog):
         if (onlySeconds == False):
             for b in self.allImages[:]:
 	        b.setVisible(False)
-	    self.topX = random.randint(blockPaddingLarge, self.getWidth() - self.totalClockWidth)
-            self.topY = random.randint(blockPaddingLarge, self.getHeight() - self.totalClockHeight)
-           
+	    
+	    #autoscaling
+	    self.lightSizeNormal = self.getWidth() / 25
+	    self.totalClockWidth = 4 * (blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)) + 2*blockPaddingSmall + 1*blockPaddingLarge
+            if (self.showSeconds):
+	        self.totalClockWidth = self.totalClockWidth + (blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)) + 1*blockPaddingLarge
+            self.totalClockHeight = blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)
+        
+        
+            #self.log('clockheigh ' + str(self.totalClockHeight))
+            #self.log('clockwidth ' + str(self.totalClockWidth) + '  ' + str(self.getWidth()))    
+	        
+	    self.topX = random.randint(1, self.getWidth() - self.totalClockWidth)
+            self.topY = random.randint(1, self.getHeight() - self.totalClockHeight)
+            #self.getWidth() - self.totalClockWidth
+            #self.getHeight() - self.totalClockHeight
+            
             hour = now.hour
             #self.log(('hour ' + str(hour)))
             self.drawSinglePart(0, 0, (hour/10), blockSizeNormal, 'red.png', 0)
-            self.drawSinglePart(3*(lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall, 0, (hour%10), blockSizeNormal, 'cyan.png', 9)
+            self.drawSinglePart(3*(self.lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall, 0, (hour%10), blockSizeNormal, 'cyan.png', 9)
        
             minute = now.minute
             #self.log(('minute ' + str(minute)))
-            self.drawSinglePart(6*(lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), blockSizeNormal, 'green.png', 18)
-            self.drawSinglePart(9*(lightSizeNormal+lightPaddingNormal)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), blockSizeNormal, 'purple.png', 27)
+            self.drawSinglePart(6*(self.lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), blockSizeNormal, 'green.png', 18)
+            self.drawSinglePart(9*(self.lightSizeNormal+lightPaddingNormal)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), blockSizeNormal, 'purple.png', 27)
         if (self.showSeconds == True):
            second = now.second
-           self.drawSinglePart(12*(lightSizeNormal+lightPaddingNormal)+3*blockPaddingSmall+2*blockPaddingLarge, 0, second, blockSizeSeconds, 'blue.png', 36)
+           self.drawSinglePart(12*(self.lightSizeNormal+lightPaddingNormal)+3*blockPaddingSmall+2*blockPaddingLarge, 0, second, blockSizeSeconds, 'blue.png', 36)
         
         if (onlySeconds == False):
             for b in self.allImages[:]:
@@ -148,10 +162,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 	self.topX = blockPaddingLarge
         self.topY = blockPaddingLarge
         
-        self.totalClockWidth = 4 * (blockSizeNormal*(lightSizeNormal + lightPaddingNormal)) + 2*blockPaddingSmall + 1*blockPaddingLarge
-        if (self.showSeconds):
-	  self.totalClockWidth = self.totalClockWidth + (blockSizeNormal*(lightSizeNormal + lightPaddingNormal)) + 1*blockPaddingLarge
-        self.totalClockHeight = blockSizeNormal*(lightSizeNormal + lightPaddingNormal)
+        
         
       
         self.log(addon_path)
