@@ -37,9 +37,9 @@ image_dir = xbmc.translatePath( os.path.join( addon_path, 'resources', 'skins', 
 
 
 #lightSizeNormal = 50
-lightPaddingNormal = 2
-blockPaddingLarge = 50
-blockPaddingSmall = 10
+#lightPaddingNormal = 2
+#blockPaddingLarge = 50
+#blockPaddingSmall = 10
 blockSizeNormal = 3
 blockSizeSeconds = 8
 
@@ -81,10 +81,11 @@ class Screensaver(xbmcgui.WindowXMLDialog):
     def drawSinglePart(self, xOffset, yOffset, numberOfLights, blockSize, texture, imageOffset):
         lightBlock = self.computeActiveLights(blockSize, numberOfLights)
         lightSize = self.lightSizeNormal
-        lightPadding = lightPaddingNormal
+        lightPadding = self.lightPaddingNormal
         #autoscaling
         if (blockSize > blockSizeNormal):
-	    lightSize = ((blockSizeNormal*lightSize)+(blockPaddingSmall*(blockSizeNormal-1)) - blockSize*3)  / (blockSize+1)
+	    #3 lights + 2 spaces
+	    lightSize = ((blockSizeNormal*lightSize)+(lightPadding*(blockSizeNormal-1)))  / (blockSize+1)
 	    lightPadding = 3
         for cell in range(0,blockSize*blockSize):
 	    column = cell%blockSize
@@ -116,32 +117,41 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 	    
 	    #autoscaling
 	    self.lightSizeNormal = self.getWidth() / 25
-	    self.totalClockWidth = 4 * (blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)) + 2*blockPaddingSmall + 1*blockPaddingLarge
+	    self.blockPaddingLarge = self.lightSizeNormal
+	    self.blockPaddingSmall = self.blockPaddingLarge / 5
+	    self.lightPaddingNormal = 2
+	    
+	    self.totalClockWidth = 4 * (blockSizeNormal*(self.lightSizeNormal + self.lightPaddingNormal)) + 2*self.blockPaddingSmall + 1*self.blockPaddingLarge
             if (self.showSeconds):
-	        self.totalClockWidth = self.totalClockWidth + (blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)) + 1*blockPaddingLarge
-            self.totalClockHeight = blockSizeNormal*(self.lightSizeNormal + lightPaddingNormal)
+	        self.totalClockWidth = self.totalClockWidth + (blockSizeNormal*(self.lightSizeNormal + self.lightPaddingNormal)) + 1*self.blockPaddingLarge
+            self.totalClockHeight = blockSizeNormal*(self.lightSizeNormal + self.lightPaddingNormal)
         
         
             #self.log('clockheigh ' + str(self.totalClockHeight))
-            #self.log('clockwidth ' + str(self.totalClockWidth) + '  ' + str(self.getWidth()))    
+            #self.log('clockwidth ' + str(self.totalClockWidth))    
 	        
-	    self.topX = random.randint(1, self.getWidth() - self.totalClockWidth)
-            self.topY = random.randint(1, self.getHeight() - self.totalClockHeight)
-            #self.getWidth() - self.totalClockWidth
-            #self.getHeight() - self.totalClockHeight
+            maxX = self.getWidth()- 100 - self.totalClockWidth
+            maxY = self.getHeight()- 100 - self.totalClockHeight
+            maxX = max(50, maxX)
+            maxY = max(50, maxY)
+            #self.log('Screen ' + str(self.getWidth()) + ' ' + str(self.getHeight()))
+            #self.log('Max ' + str(maxX) + ' ' + str(maxY))
+	    #self.topX = random.randint(1, maxX)
+            #self.topY = random.randint(1, maxY)
+            
             
             hour = now.hour
             #self.log(('hour ' + str(hour)))
             self.drawSinglePart(0, 0, (hour/10), blockSizeNormal, 'red.png', 0)
-            self.drawSinglePart(3*(self.lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall, 0, (hour%10), blockSizeNormal, 'cyan.png', 9)
+            self.drawSinglePart(3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, 0, (hour%10), blockSizeNormal, 'cyan.png', 9)
        
             minute = now.minute
             #self.log(('minute ' + str(minute)))
-            self.drawSinglePart(6*(self.lightSizeNormal+lightPaddingNormal)+1*blockPaddingSmall+blockPaddingLarge, 0, (minute/10), blockSizeNormal, 'green.png', 18)
-            self.drawSinglePart(9*(self.lightSizeNormal+lightPaddingNormal)+2*blockPaddingSmall+blockPaddingLarge, 0, (minute%10), blockSizeNormal, 'purple.png', 27)
+            self.drawSinglePart(6*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute/10), blockSizeNormal, 'green.png', 18)
+            self.drawSinglePart(9*(self.lightSizeNormal+self.lightPaddingNormal)+2*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute%10), blockSizeNormal, 'purple.png', 27)
         if (self.showSeconds == True):
            second = now.second
-           self.drawSinglePart(12*(self.lightSizeNormal+lightPaddingNormal)+3*blockPaddingSmall+2*blockPaddingLarge, 0, second, blockSizeSeconds, 'blue.png', 36)
+           self.drawSinglePart(12*(self.lightSizeNormal+self.lightPaddingNormal)+3*self.blockPaddingSmall+2*self.blockPaddingLarge, 0, second, blockSizeSeconds, 'blue.png', 36)
         
         if (onlySeconds == False):
             for b in self.allImages[:]:
@@ -159,8 +169,8 @@ class Screensaver(xbmcgui.WindowXMLDialog):
         self.redrawInterval = int(self.addon.getSetting('setting_redraw_interval'))
 	self.monitor = self.ExitMonitor(self.exit, self.log)
 	self.allImages = list()
-	self.topX = blockPaddingLarge
-        self.topY = blockPaddingLarge
+	self.topX = 20
+        self.topY = 20
         
         
         
@@ -168,7 +178,6 @@ class Screensaver(xbmcgui.WindowXMLDialog):
         self.log(addon_path)
 
         self.showClock(False)
-	xbmc.sleep(1000)
         self.cont = controller.Controller(self.log, self.showClock, self.showSeconds, self.redrawInterval)
         self.cont.start() 
         #self.showClock()
