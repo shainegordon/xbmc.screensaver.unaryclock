@@ -57,10 +57,10 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 	    self.log_callback = log_callback
 
         def onScreensaverDeactivated(self):
-            self.log_callback('sending exit_callback')
+            #self.log_callback('sending exit_callback')
             self.exit_callback()
         def onAbortRequested(self):
-	    self.log_callback('abort requested')
+	    #self.log_callback('abort requested')
 	    self.exit_callback()
 
 
@@ -136,8 +136,8 @@ class Screensaver(xbmcgui.WindowXMLDialog):
             maxY = max(50, maxY)
             #self.log('Screen ' + str(self.getWidth()) + ' ' + str(self.getHeight()))
             #self.log('Max ' + str(maxX) + ' ' + str(maxY))
-	    #self.topX = random.randint(1, maxX)
-            #self.topY = random.randint(1, maxY)
+	    self.topX = random.randint(1, maxX)
+            self.topY = random.randint(1, maxY)
             
             
             hour = now.hour
@@ -172,10 +172,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 	self.topX = 20
         self.topY = 20
         
-        
-        
-      
-        self.log(addon_path)
+        #self.log(addon_path)
 
         self.showClock(False)
         self.cont = controller.Controller(self.log, self.showClock, self.showSeconds, self.redrawInterval)
