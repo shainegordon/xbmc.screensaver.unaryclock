@@ -2,4 +2,6 @@
 <strings>
 	<string id="33111">Show seconds</string>
 	<string id="33112">Redraw the clock after (seconds)</string>
+	<string id="33113">Randomize Hour/Minute</string>
+	<string id="33114">Randomize Seconds (when shown)</string>
 </strings>
