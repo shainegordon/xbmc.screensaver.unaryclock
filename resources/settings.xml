@@ -2,6 +2,6 @@
 <settings>
     <setting id="setting_show_seconds" type="bool" label="33111" default="true"/>
     <setting id="setting_redraw_interval" type="labelenum" label="33112" values="15|30|60" default="30"/>
-    <setting id="setting_show_random_min" type="bool" label="33113" default="true"/>
+    <setting id="setting_show_random_hourmin" type="bool" label="33113" default="true"/>
     <setting id="setting_show_random_sec" type="bool" label="33114" default="true"/>
 </settings>
