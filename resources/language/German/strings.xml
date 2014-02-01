@@ -3,4 +3,6 @@
 	<!-- Addon settings -->
 	<string id="33111">Zeige Sekunden</string>
 	<string id="33112">Zeichne die Uhr neu nach (Sekunden)</string>
+	<string id="33113">Randomize-Stunde und Minute</string>
+	<string id="33114">Randomize-Sekunden (wenn gezeigt)</string>
 </strings>
