@@ -5,4 +5,9 @@
 	<string id="33112">Zeichne die Uhr neu nach (Sekunden)</string>
 	<string id="33113">Zeichne Stunde und Minute zufällig</string>
 	<string id="33114">Zeige Sekunden zufällig</string>
+	<string id="33115">Farbe Stunden 1</string>
+	<string id="33116">Farbe Stunden 2</string>
+	<string id="33117">Farbe Minuten 1</string>
+	<string id="33118">Farbe Minuten 2</string>
+	<string id="33119">Farbe Sekunden</string>
 </strings>

@@ -4,4 +4,9 @@
 	<string id="33112">Redraw the clock after (seconds)</string>
 	<string id="33113">Randomize Hour/Minute</string>
 	<string id="33114">Randomize Seconds (when shown)</string>
+	<string id="33115">Color Hours 1</string>
+	<string id="33116">Color Hours 2</string>
+	<string id="33117">Color Minutes 1</string>
+	<string id="33118">Color Minutes 2</string>
+	<string id="33119">Color Seconds</string>
 </strings>
