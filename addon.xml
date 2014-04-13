@@ -11,6 +11,8 @@
     <description lang="en">A screensaver which displays a unary clock</description>
     <platform>all</platform>
     <disclaimer lang="en">For bugs, requests or general questions visit see https://github.com/schmiegelt/xbmc.screensaver.unaryclock </disclaimer>
+    <language></language>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
     <forum>http://forum.xbmc.org/showthread.php?tid=179237</forum>
     <website>https://github.com/schmiegelt/xbmc.screensaver.unaryclock</website>
     <email></email>
