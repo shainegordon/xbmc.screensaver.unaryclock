@@ -1,3 +1,4 @@
+2014-02-11 v0.8 Support running the screensaver from a script with RunScript()
 2014-04-14 v0.7.1 ensured XBMC compliance
 2014-02-11 v0.7 added user chosen colors
 2014-01-21 v0.6 added additional user-driven options to control hh:mm:ss block randomization
