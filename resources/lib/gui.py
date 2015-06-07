@@ -154,7 +154,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
             self.drawSinglePart(9*(self.lightSizeNormal+self.lightPaddingNormal)+2*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute%10), blockSizeNormal, self.min2Color, 27, self.randHourMin)
         if (self.showSeconds == True):
            second = now.second
-           self.drawSinglePart(12*(self.lightSizeNormal+self.lightPaddingNormal)+3*self.blockPaddingSmall+2*self.blockPaddingLarge, 0, second, blockSizeSeconds, self.secondsColor, 36, self.randSec)
+           self.drawSinglePart(0, 3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, second, blockSizeSeconds, self.secondsColor, 36, self.randSec)
         
         if (onlySeconds == False):
             for b in self.allImages[:]:
