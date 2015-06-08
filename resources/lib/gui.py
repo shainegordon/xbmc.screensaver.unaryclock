@@ -67,33 +67,36 @@ class Screensaver(xbmcgui.WindowXMLDialog):
     
     def computeActiveLights(self, size, numberOfLights, randomized): 
         self.flatLightsArray = list()
-        for number in range(0,size*size):
+        for number in range(0,size):
             self.flatLightsArray.append(0)
         for number in range(0,numberOfLights):
 	    if (randomized):
-		rand = random.randint(0,size*size-1)
+		rand = random.randint(0,size-1)
 	    else:
   	        rand = number
             while self.flatLightsArray[rand] == 1:
-               rand = (rand+1) % (size*size)
+               rand = (rand+1) % (size)
             self.flatLightsArray[rand] = 1
             numberOfLights = numberOfLights-1
             #self.log(self.flatLightsArray)
         return self.flatLightsArray
       
-    def drawSinglePart(self, xOffset, yOffset, numberOfLights, blockSize, texture, imageOffset, randomized):
-        lightBlock = self.computeActiveLights(blockSize, numberOfLights, randomized)
+    def drawSinglePart(self, xOffset, yOffset, numberOfLights, blockSizeX, blockSizeY, texture, imageOffset, randomized):
+        lightBlock = self.computeActiveLights(blockSizeX*blockSizeY, numberOfLights, randomized)
         lightSize = self.lightSizeNormal
         lightPadding = self.lightPaddingNormal
         #autoscaling
-        if (blockSize > blockSizeNormal):
-	    #3 lights + 2 spaces
-	    lightSize = ((blockSizeNormal*lightSize)+(lightPadding*(blockSizeNormal-1)))  / (blockSize+1)
-	    lightPadding = 3
-        for cell in range(0,blockSize*blockSize):
-	    column = cell%blockSize
-            row = cell/blockSize
+        #if (blockSize > blockSizeNormal):
+	#    #3 lights + 2 spaces
+	#    lightSize = ((blockSizeNormal*lightSize)+(lightPadding*(blockSizeNormal-1)))  / (blockSize+1)
+	#    lightPadding = 3
+        for cell in range(0,blockSizeX*blockSizeY):
+	    row = cell%blockSizeX
+            column = cell/blockSizeX
             t = 'grey.png'
+         
+            self.log(row)
+            self.log(column)
             
             newX = self.topX+xOffset+column*(lightSize+lightPadding)
             newY = self.topY+yOffset+row*(lightSize+lightPadding)
@@ -145,16 +148,16 @@ class Screensaver(xbmcgui.WindowXMLDialog):
             
             hour = now.hour
             #self.log(('hour ' + str(hour)))
-            self.drawSinglePart(0, 0, (hour/10), blockSizeNormal, self.hour1Color, 0, self.randHourMin)
-            self.drawSinglePart(3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, 0, (hour%10), blockSizeNormal, self.hour2Color, 9, self.randHourMin)
+            self.drawSinglePart(0, 0, (hour/10), blockSizeNormal, blockSizeNormal, self.hour1Color, 0, self.randHourMin)
+            self.drawSinglePart(3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, 0, (hour%10), blockSizeNormal, blockSizeNormal, self.hour2Color, 9, self.randHourMin)
        
             minute = now.minute
             #self.log(('minute ' + str(minute)))
-            self.drawSinglePart(6*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute/10), blockSizeNormal, self.min1Color, 18, self.randHourMin)
-            self.drawSinglePart(9*(self.lightSizeNormal+self.lightPaddingNormal)+2*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute%10), blockSizeNormal, self.min2Color, 27, self.randHourMin)
+            self.drawSinglePart(6*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute/10), blockSizeNormal, blockSizeNormal, self.min1Color, 18, self.randHourMin)
+            self.drawSinglePart(9*(self.lightSizeNormal+self.lightPaddingNormal)+2*self.blockPaddingSmall+self.blockPaddingLarge, 0, (minute%10), blockSizeNormal, blockSizeNormal, self.min2Color, 27, self.randHourMin)
         if (self.showSeconds == True):
            second = now.second
-           self.drawSinglePart(0, 3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, second, blockSizeSeconds, self.secondsColor, 36, self.randSec)
+           self.drawSinglePart(0, 3*(self.lightSizeNormal+self.lightPaddingNormal)+1*self.blockPaddingSmall, second, 6, 10, self.secondsColor, 36, self.randSec)
         
         if (onlySeconds == False):
             for b in self.allImages[:]:
